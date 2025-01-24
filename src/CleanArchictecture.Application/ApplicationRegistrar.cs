@@ -1,12 +1,11 @@
-
-﻿using CleanArhictecture.Application.Behaviors;
+using CleanArhictecture.Application.Behaviors;
 using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace CleanArchictecture.Application;
 
-    public static class ApplicationRegistrar
-    {
+public static class ApplicationRegistrar
+{
         public static IServiceCollection AddApplicaton(this IServiceCollection services)
         {
             services.AddMediatR(conf =>
@@ -20,5 +19,5 @@ namespace CleanArchictecture.Application;
             return services;
         }
          
-    }
+}
 

@@ -1,10 +1,9 @@
 ﻿using GenericRepository;
 
-namespace CleanArchictecture.Domain.Employees
-{
-    //Ana işlemler genelde burada yapılır. Create / Update / Delete/ Get
+namespace CleanArchictecture.Domain.Employees;
 
-    public interface IEmployeeRepository : IRepository<Employee>
-    {
-    }
+//Ana işlemler genelde burada yapılır. Create / Update / Delete/ Get
+
+public interface IEmployeeRepository : IRepository<Employee>
+{
 }

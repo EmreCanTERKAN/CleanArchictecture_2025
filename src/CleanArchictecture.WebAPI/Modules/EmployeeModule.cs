@@ -2,8 +2,8 @@
 using MediatR;
 using TS.Result;
 
-namespace CleanArchictecture.WebAPI.Modules
-{
+namespace CleanArchictecture.WebAPI.Modules;
+
     public static class EmployeeModule
     {
         public static void RegisterEmployeeRoutes(this IEndpointRouteBuilder app)
@@ -19,4 +19,4 @@ namespace CleanArchictecture.WebAPI.Modules
                 .Produces<Result<string>>();
         }
     }
-}
+
