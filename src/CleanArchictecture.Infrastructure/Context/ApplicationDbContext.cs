@@ -1,13 +1,12 @@
 ﻿using CleanArchictecture.Domain.Abstractions;
 using CleanArchictecture.Domain.Employees;
-using CleanArchictecture.Infrastructure.Configurations;
 using GenericRepository;
 using Microsoft.EntityFrameworkCore;
 
-namespace CleanArchictecture.Infrastructure.Context
+namespace CleanArchictecture.Infrastructure.Context;
+
+internal sealed class ApplicationDbContext : DbContext , IUnitOfWork
 {
-    internal sealed class ApplicationDbContext : DbContext , IUnitOfWork
-    {
         public ApplicationDbContext(DbContextOptions options) : base(options)
         {
         }
@@ -51,5 +50,5 @@ namespace CleanArchictecture.Infrastructure.Context
 
             return base.SaveChangesAsync(cancellationToken);
         }
-    }
 }
+

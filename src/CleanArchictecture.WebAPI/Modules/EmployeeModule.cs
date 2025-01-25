@@ -4,19 +4,19 @@ using TS.Result;
 
 namespace CleanArchictecture.WebAPI.Modules;
 
-    public static class EmployeeModule
+public static class EmployeeModule
+{
+    public static void RegisterEmployeeRoutes(this IEndpointRouteBuilder app)
     {
-        public static void RegisterEmployeeRoutes(this IEndpointRouteBuilder app)
-        {
-            RouteGroupBuilder group = app.MapGroup("/employees").WithTags("Employees");
+        RouteGroupBuilder group = app.MapGroup("/employees").WithTags("Employees");
 
-            group.MapPost(string.Empty,
-                async (ISender sender, EmployeeCreateCommand request, CancellationToken cancellationToken) =>
-                {
-                    var response = await sender.Send(request, cancellationToken);
-                    return response.IsSuccessful ? Results.Ok(response) : Results.InternalServerError(response);
-                })
-                .Produces<Result<string>>();
-        }
+        group.MapPost(string.Empty,
+            async (ISender sender, EmployeeCreateCommand request, CancellationToken cancellationToken) =>
+            {
+                var response = await sender.Send(request, cancellationToken);
+                return response.IsSuccessful ? Results.Ok(response) : Results.InternalServerError(response);
+            })
+            .Produces<Result<string>>();
     }
+}
 

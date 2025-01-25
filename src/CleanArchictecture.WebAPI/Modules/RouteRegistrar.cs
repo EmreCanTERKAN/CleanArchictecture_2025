@@ -1,10 +1,9 @@
-﻿namespace CleanArchictecture.WebAPI.Modules
+﻿namespace CleanArchictecture.WebAPI.Modules;
+
+public static class RouteRegistrar
 {
-    public static class RouteRegistrar
+    public static void RegisterRoutes(this IEndpointRouteBuilder app)
     {
-        public static void RegisterRoutes(this IEndpointRouteBuilder app)
-        {
-            app.RegisterEmployeeRoutes();
-        }
+        app.RegisterEmployeeRoutes();
     }
 }
