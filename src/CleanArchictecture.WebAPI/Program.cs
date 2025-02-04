@@ -53,35 +53,36 @@ builder.Services.AddControllers().AddOData(opt =>
         .SetMaxTop(null)
         .AddRouteComponents("odata",AppODataController.GetEdmModel()));
 
-builder.Services.AddRateLimiter(x => // Rate Limiter servisini uygulamaya ekler.
-    x.AddFixedWindowLimiter("fixed", cfg => // "Fixed Window" stratejisiyle bir rate limiting politikasý ekler.
+builder.Services.AddRateLimiter(x => 
+    x.AddFixedWindowLimiter("fixed", cfg => 
     {
-        cfg.QueueLimit = 100; // Kuyruða alýnabilecek maksimum istek sayýsýný belirler (100 istek).
-        cfg.Window = TimeSpan.FromMinutes(1); // Zaman penceresini 1 dakika olarak ayarlar.
-        cfg.PermitLimit = 100; // 1 dakika içinde izin verilen maksimum istek sayýsýný belirler (100 istek).
-        cfg.QueueProcessingOrder = QueueProcessingOrder.OldestFirst; // Kuyruktaki isteklerin iþlenme sýrasýný belirler (en eski istekler önce iþlenir).
+        cfg.QueueLimit = 100; 
+        cfg.Window = TimeSpan.FromMinutes(1); 
+        cfg.PermitLimit = 100; 
+        cfg.QueueProcessingOrder = QueueProcessingOrder.OldestFirst; 
     }));
 
 builder.Services.AddExceptionHandler<ExceptionHandler>().AddProblemDetails();
 var app = builder.Build();
 
+app.UseExceptionHandler(); 
+app.UseCors(x => x
+    .AllowAnyHeader()
+    .AllowCredentials()
+    .AllowAnyMethod()
+    .SetIsOriginAllowed(t => true));
+
+app.UseRouting();  
+
+app.UseAuthentication();  
+app.UseAuthorization();   
+
+app.MapControllers().RequireRateLimiting("fixed").RequireAuthorization();  
+
 app.MapOpenApi();
 app.MapScalarApiReference();
-
 app.MapDefaultEndpoints();
-
-//eðer signalR ile çalýþmamýz gerekiyorsa AllowCredentials izin vermemiz gerekiyor.
-app.UseCors(x => x
-.AllowAnyHeader()
-.AllowCredentials()
-.AllowAnyMethod()
-.SetIsOriginAllowed(t => true));
-
-app.MapControllers().RequireRateLimiting("fixed");
-
-app.RegisterRoutes();
-
-app.UseExceptionHandler();
+app.RegisterRoutes();  
 
 ExtensionsMiddleware.CreateFirstUser(app);
 

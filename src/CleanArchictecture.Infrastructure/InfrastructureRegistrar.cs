@@ -1,8 +1,11 @@
 ﻿using CleanArchictecture.Domain.Employees;
 using CleanArchictecture.Infrastructure.Context;
+using CleanArchictecture.Infrastructure.Options;
 using CleanArchictecture.Infrastructure.Repositories;
 using CleanArhictecture_2025.Domain.Users;
+using CleanArhictecture_2025.Infrastructure.Options;
 using GenericRepository;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -21,9 +24,6 @@ namespace CleanArchictecture.Infrastructure
                 options.UseSqlServer(connectionString);
             });
 
-            services.AddScoped<IUnitOfWork>(srv => srv.GetRequiredService<ApplicationDbContext>());
-
-            //identity (usermanager)
             services
                 .AddIdentity<AppUser, IdentityRole<Guid>>(opt =>
                 {
@@ -34,24 +34,31 @@ namespace CleanArchictecture.Infrastructure
                     opt.Password.RequireUppercase = false;
                     opt.Lockout.MaxFailedAccessAttempts = 5;
                     opt.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
+                    opt.SignIn.RequireConfirmedEmail = true;
 
                 })
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
+
+            services.AddAuthentication(opt =>
+            {
+                opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer();
+            services.AddAuthorization();
+            services.Configure<JwtOptions>(configuration.GetSection("Jwt"));
+            services.ConfigureOptions<JwtOptionsSetup>();
+            services.AddScoped<IUnitOfWork>(srv => srv.GetRequiredService<ApplicationDbContext>());
+
+
             services.AddScoped<IEmployeeRepository, EmployeeRepository>();
-            // AddScoped<IEmployeeRepository, EmployeeRepository>() gibi kayıtları tek tek yapmanıza gerek  kalmaz.Scrutor,otomatik olarak EmployeeRepository sınıfını IEmployeeRepository ile ilişkilendirir.
-
-            //AsImplementedInterfaces() metodu sayesinde, bir sınıfın implement ettiği tüm arayüzler DI konteynerine eklenir.
-
-            //Tüm sınıflar için belirli bir yaşam döngüsü(Scoped, Singleton, Transient) belirleyebilirsiniz.
             services.Scan(opt => opt
             .FromAssemblies(typeof(InfrastructureRegistrar).Assembly)
             .AddClasses(publicOnly: false)
             .UsingRegistrationStrategy(RegistrationStrategy.Skip)
             .AsImplementedInterfaces()
-            );
-           
+            );         
             return services;
         }
        
