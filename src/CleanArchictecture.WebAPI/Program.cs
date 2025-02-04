@@ -7,9 +7,31 @@ using Microsoft.AspNetCore.OData;
 using CleanArchictecture.WebAPI.Controllers;
 using CleanArchictecture.WebAPI.Modules;
 using CleanArhictecture_2025.WebAPI;
+using Serilog;
+using Serilog.Events;
 
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Host.UseSerilog((context, loggerConfig) =>
+{
+    loggerConfig.ReadFrom.Configuration(context.Configuration);
+});
+
+Log.Logger = new LoggerConfiguration()
+    .MinimumLevel.Override("Microsoft", LogEventLevel.Warning) // Microsoft loglarýný azalt
+    .MinimumLevel.Override("System", LogEventLevel.Warning)
+    .MinimumLevel.Debug() // Genel minimum log seviyesi
+    .Enrich.FromLogContext()
+    .Enrich.WithMachineName()
+    .Enrich.WithThreadName()
+    .Enrich.WithThreadId()
+    .WriteTo.Console(
+        outputTemplate: "[{Timestamp:HH:mm:ss} {Level:u3}] {Message:lj} {NewLine}{Exception}"
+    )
+    .WriteTo.Seq("http://localhost:5341") // Seq sunucu URL
+    .CreateLogger();
+
 
 builder.AddServiceDefaults();
 
