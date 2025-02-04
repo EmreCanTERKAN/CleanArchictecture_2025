@@ -25,7 +25,17 @@ namespace CleanArchictecture.Infrastructure
 
             //identity (usermanager)
             services
-                .AddIdentity<AppUser, IdentityRole<Guid>>()
+                .AddIdentity<AppUser, IdentityRole<Guid>>(opt =>
+                {
+                    opt.Password.RequiredLength = 1;
+                    opt.Password.RequireNonAlphanumeric = false;
+                    opt.Password.RequireDigit = false;
+                    opt.Password.RequireLowercase = false;
+                    opt.Password.RequireUppercase = false;
+                    opt.Lockout.MaxFailedAccessAttempts = 5;
+                    opt.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
+
+                })
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 

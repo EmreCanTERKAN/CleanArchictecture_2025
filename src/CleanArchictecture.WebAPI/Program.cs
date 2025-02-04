@@ -9,6 +9,7 @@ using CleanArchictecture.WebAPI.Modules;
 using CleanArhictecture_2025.WebAPI;
 using Serilog;
 using Serilog.Events;
+using CleanArchictecture.WebAPI.Middlewares;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -81,5 +82,7 @@ app.MapControllers().RequireRateLimiting("fixed");
 app.RegisterRoutes();
 
 app.UseExceptionHandler();
+
+ExtensionsMiddleware.CreateFirstUser(app);
 
 app.Run();
