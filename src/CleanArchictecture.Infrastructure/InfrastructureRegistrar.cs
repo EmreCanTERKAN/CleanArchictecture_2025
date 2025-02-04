@@ -1,7 +1,9 @@
 ﻿using CleanArchictecture.Domain.Employees;
 using CleanArchictecture.Infrastructure.Context;
 using CleanArchictecture.Infrastructure.Repositories;
+using CleanArhictecture_2025.Domain.Users;
 using GenericRepository;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -20,7 +22,13 @@ namespace CleanArchictecture.Infrastructure
             });
 
             services.AddScoped<IUnitOfWork>(srv => srv.GetRequiredService<ApplicationDbContext>());
-            
+
+            //identity (usermanager)
+            services
+                .AddIdentity<AppUser, IdentityRole<Guid>>()
+                .AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddDefaultTokenProviders();
+
             services.AddScoped<IEmployeeRepository, EmployeeRepository>();
             // AddScoped<IEmployeeRepository, EmployeeRepository>() gibi kayıtları tek tek yapmanıza gerek  kalmaz.Scrutor,otomatik olarak EmployeeRepository sınıfını IEmployeeRepository ile ilişkilendirir.
 
