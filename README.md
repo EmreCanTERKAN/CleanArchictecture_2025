@@ -38,6 +38,7 @@ Aşağıdaki mimari yapı, tasarım desenleri ve kütüphaneler kullanılarak ol
 - **OData**: Esnek veri sorgulama ve filtreleme için.
 - **Scrutor**: Dinamik servis kaydı ve Dependency Injection yönetimi için.
 
+=======
 ### **Loglama**
 - **Serilog**:Loglama operasyonları için
 - **Seq** : Loglamaları anlık takip edeceğimiz bir arayüz 
@@ -45,4 +46,4 @@ Aşağıdaki mimari yapı, tasarım desenleri ve kütüphaneler kullanılarak ol
 ### **Adımlar**
 1. **Depoyu Klonlayın**:
    ```bash
-   git clone https://github.com/your-repo-url.git
+   git clone https://github.com/.git
