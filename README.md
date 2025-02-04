@@ -38,6 +38,9 @@ Aşağıdaki mimari yapı, tasarım desenleri ve kütüphaneler kullanılarak ol
 - **OData**: Esnek veri sorgulama ve filtreleme için.
 - **Scrutor**: Dinamik servis kaydı ve Dependency Injection yönetimi için.
 
+### **Loglama**
+- **Serilog**:Loglama operasyonları için
+- **Seq** : Loglamaları anlık takip edeceğimiz bir arayüz 
 ---
 ### **Adımlar**
 1. **Depoyu Klonlayın**:
