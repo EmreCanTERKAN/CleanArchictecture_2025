@@ -14,6 +14,11 @@ using CleanArchictecture.WebAPI.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddResponseCompression(opt =>
+{
+    opt.EnableForHttps = true;
+});
+
 builder.Host.UseSerilog((context, loggerConfig) =>
 {
     loggerConfig.ReadFrom.Configuration(context.Configuration);
@@ -64,6 +69,11 @@ builder.Services.AddRateLimiter(x =>
 
 builder.Services.AddExceptionHandler<ExceptionHandler>().AddProblemDetails();
 var app = builder.Build();
+app.MapOpenApi();
+app.MapScalarApiReference();
+app.MapDefaultEndpoints();
+
+app.UseHttpsRedirection();
 
 app.UseExceptionHandler(); 
 app.UseCors(x => x
@@ -75,13 +85,12 @@ app.UseCors(x => x
 app.UseRouting();  
 
 app.UseAuthentication();  
-app.UseAuthorization();   
+app.UseAuthorization();
+
+app.UseResponseCompression();
 
 app.MapControllers().RequireRateLimiting("fixed").RequireAuthorization();  
 
-app.MapOpenApi();
-app.MapScalarApiReference();
-app.MapDefaultEndpoints();
 app.RegisterRoutes();  
 
 ExtensionsMiddleware.CreateFirstUser(app);
